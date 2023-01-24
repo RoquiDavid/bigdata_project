@@ -1,0 +1,68 @@
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import VectorIndexer
+from pyspark.ml.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+from pyspark.sql.types import IntegerType
+from pyspark.sql import SparkSession
+from pyspark.conf import SparkConf
+from pyspark.ml.feature import StringIndexer
+from pyspark.ml.classification import RandomForestClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.feature import PCA
+from pyspark.sql.functions import monotonically_increasing_id, row_number
+from pyspark.sql.window import Window
+from pyspark.sql import functions as F
+from pyspark.ml.feature import VectorSlicer
+from pyspark.ml.feature import UnivariateFeatureSelector
+import findspark
+import utils
+findspark.init()
+
+###############################################################################
+#                     SPARK SESSION INITIALIZATION                            #
+###############################################################################
+
+#Charge la session spark
+spark = (SparkSession.
+         builder.
+         master('local[*]').
+         appName('test').
+         config(conf = SparkConf()).
+         getOrCreate())
+
+spark.conf.set("spark.sql.repl.eagerEval.enabled",True)
+
+
+###############################################################################
+#                              Data loading                                   #
+###############################################################################
+
+
+df = spark.read.csv("data/application_record.csv", header=True, inferSchema= \
+                                                                True,sep=",")
+df_2 = spark.read.csv("data/credit_record.csv", header=True, inferSchema= True\
+                                                       ,sep=",")
+    
+    
+###############################################################################
+#                             Data preparation                                #
+###############################################################################
+#Resumer statistique du dataset                                                        
+#df.summary().show(truncate=False, vertical=True)
+
+#Resumer statistique du dataset                                                                ,sep=",")
+#df2.summary().show(truncate=False, vertical=True)
+#
+#for col in df.columns:
+#    if("NAME" in col):
+#        df.select(col).distinct().show()
+        
+print("df1=",(df.count(), len(df.columns)))
+print("df2=",(df_2.count(), len(df_2.columns)))
+#Jointure via l'id des deux dataset
+df = df.join(df_2,df.ID ==  df_2.ID,"inner").drop(df.ID)
+print("df final = ",(df.count(), len(df.columns)))
+df.printSchema()
+
+utils.file_train_test_creator(df,spark)
+spark.stop()
