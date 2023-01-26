@@ -82,7 +82,9 @@ df_pca_test = utils.pca_feature_selection(df_vector_test, label_test,3)
 #On a ici garder la meilleur combinaison feature selection/classification
 #qui est PCA et MLP
 #MLP 
-print("\n MLP PCA")
-utils.mlp_analysis(df_pca_train,df_pca_test, 3)
+#Gradient boosting classification
+print("\n GRADIENT PCA")
+utils.gradient_boosting_analysis(df_pca_train,df_pca_test, 2, 10)
+
 
 spark.stop()

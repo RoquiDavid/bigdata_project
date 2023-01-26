@@ -82,8 +82,8 @@ df_vector_train,df_vector_test,label_train,label_test = utils.\
 df_vec_slice_train = utils.vec_slicer(df_vector_train)
 df_vec_slice_test = utils.vec_slicer(df_vector_test)
 #PCA
-df_pca_train = utils.pca_feature_selection(df_vector_train, label_train)
-df_pca_test = utils.pca_feature_selection(df_vector_test, label_test)
+df_pca_train = utils.pca_feature_selection(df_vector_train, label_train,3)
+df_pca_test = utils.pca_feature_selection(df_vector_test, label_test,3)
 #Univariate
 df_uni_train = utils.univariate(df_vector_train)
 df_uni_test = utils.univariate(df_vector_test)
