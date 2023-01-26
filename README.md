@@ -38,4 +38,3 @@ python3 experiment.py
 
 - Le fichier experiment contient l'ensemble des combinaisons avec l'affichage des résultats pour chaqune d'entre elle
 
-
